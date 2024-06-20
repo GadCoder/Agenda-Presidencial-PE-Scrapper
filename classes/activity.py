@@ -59,22 +59,4 @@ class Activity:
             else:
                 activity, location = description.split("Lugar:")
         self.description = activity.strip()
-        self.location = location.strip()
-
-
-    def record_on_db(self):
-        headers = {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'
-        }
-        data = {
-            'description': self.description,
-            'date': self.activity_date,
-            'location': self.location
-        }
-        request = requests.post(url='http://127.0.0.1:8000/activity/register/', headers=headers, json=data)
-        if request.status_code == 200:
-            print(f"\tSUCCESFULLY recorded activity {self.description} for {self.activity_date}")
-        else:
-            print(f"\tERROR recording activity {self.description} for {self.activity_date}")
-        
+        self.location = location.strip()        
