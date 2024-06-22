@@ -9,7 +9,7 @@ scrapper = Scrapper()
 scrapper.get_current_activities()
 ```
 
-### Obtener las actividades hasta un periodo 
+### Obtener las actividades hasta una fecha
 ```python
 from classes.scrapper import Scrapper
 scrapper = Scrapper()
