@@ -86,6 +86,5 @@ class Scrapper:
                     activities.append(activity.export_activity())
         df = pd.DataFrame(activities)
         df.columns = ['activity', 'place', 'datetime']
-        print(df)
-        print(f"{len(activities)} imported to activities.csv")
+        print(f"{len(activities)} activities imported to activities.csv")
         df.to_csv('activities.csv', index=True)
