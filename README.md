@@ -27,4 +27,4 @@ scrapper.export_data_to_csv()
 
 ## Pendiente:
 - [x] Exportar información en CSV
-- [] Agregar rango de inicia para obtener data histórica
+- [ ] Agregar rango de inicia para obtener data histórica
