@@ -1,12 +1,11 @@
-from time import sleep
 import requests
-from typing import Any
+from time import sleep
 
+import pandas as pd
 from bs4 import BeautifulSoup
 
 from classes.selenium_driver import SeleniumDriver
 from classes.calendar_week import CalendarWeek
-
 
 class Scrapper:
     def __init__(self) -> None:
@@ -20,15 +19,37 @@ class Scrapper:
         self.create_soup()
 
 
+    def create_soup(self):
+        try:
+            html = self.selenium_driver.get_current_week_page(url=self.iframe_src)
+            soup = BeautifulSoup(html, features="html.parser")
+            self.soup = soup
+        except Exception as e:
+            print(f"Error creating soup -> {e}")
+
+    
+    def get_iframe_link(self):
+        url = 'https://www.gob.pe/institucion/presidencia/agenda'
+        request = requests.get(url=url)
+        soup = BeautifulSoup(request.text, features='html.parser')
+        iframe = soup.find('iframe')
+        try:
+            src = iframe['src']
+            self.iframe_src = src
+        except Exception as e:
+            print(f"Error when finding iframe src: {e}")
+      
+
     def get_current_activities(self):
         try:
             current_week = CalendarWeek(soup=self.soup)
             current_week.show_activities()
+            self.calendar_weeks.append(current_week)
         finally:
             self.selenium_driver.kill_driver()
 
 
-    def on_last_week(self, week: CalendarWeek,  day: int, month: int, year: int):
+    def is_on_last_week(self, week: CalendarWeek,  day: int, month: int, year: int):
         if week.year < year:
             return True
         week_month = week.calendar_days[0].month
@@ -46,8 +67,9 @@ class Scrapper:
             while True:
                 week = CalendarWeek(soup=soup)
                 week.show_activities()
-                on_last_week = self.on_last_week(week=week, day=last_day, month=last_month, year=last_year)
-                if on_last_week:
+                self.calendar_weeks.append(week)
+                is_on_last_week = self.is_on_last_week(week=week, day=last_day, month=last_month, year=last_year)
+                if is_on_last_week:
                     return
                 sleep(5)
                 html = self.selenium_driver.get_previous_week_page()
@@ -56,23 +78,14 @@ class Scrapper:
             self.selenium_driver.kill_driver()
 
 
-    def get_iframe_link(self):
-        url = 'https://www.gob.pe/institucion/presidencia/agenda'
-        request = requests.get(url=url)
-        soup = BeautifulSoup(request.text, features='html.parser')
-        iframe = soup.find('iframe')
-        try:
-            src = iframe['src']
-            self.iframe_src = src
-        except Exception as e:
-            print(f"Error when finding iframe src: {e}")
-
-
-    def create_soup(self):
-        try:
-            html = self.selenium_driver.get_current_week_page(url=self.iframe_src)
-            soup = BeautifulSoup(html, features="html.parser")
-            self.soup = soup
-        except Exception as e:
-            print(f"Error creating soup -> {e}")
-      
+    def export_data_to_csv(self):
+        activities = []
+        for calendar_week in self.calendar_weeks:
+            for day in calendar_week.calendar_days:
+                for activity in day.activities:
+                    activities.append(activity.export_activity())
+        df = pd.DataFrame(activities)
+        df.columns = ['activity', 'place', 'datetime']
+        print(df)
+        print(f"{len(activities)} imported to activities.csv")
+        df.to_csv('activities.csv', index=True)

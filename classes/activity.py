@@ -1,8 +1,5 @@
-
 from datetime import datetime
 from bs4 import NavigableString, Tag
-import requests
-
 
 class Activity:
     def __init__(self, container: Tag | NavigableString, day: int, month: int, year: int) -> None:
@@ -59,4 +56,8 @@ class Activity:
             else:
                 activity, location = description.split("Lugar:")
         self.description = activity.strip()
-        self.location = location.strip()        
+        self.location = location.strip()   
+
+
+    def export_activity(self):
+        return (self.description, self.location, self.activity_date)

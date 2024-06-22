@@ -1,6 +1,7 @@
 bot_cookies/
 bot_cookies/cookies.json
 twitter_bot.py
+activities.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

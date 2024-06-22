@@ -17,4 +17,5 @@ scrapper.get_history_data(last_day=1, last_month=4, last_year=2024)
 ```
 
 ## Pendiente:
-- Exportar información en CSV
+- [x] Exportar información en CSV
+- [] Agregar rango de inicia para obtener data histórica

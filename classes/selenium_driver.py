@@ -17,6 +17,16 @@ class SeleniumDriver:
         options = webdriver.ChromeOptions()
         options.add_argument("--enable-javascript")
         options.add_experimental_option('prefs', {'intl.accept_languages': 'en'})
+        options.add_argument('--headless')
+        options.add_argument("--incognito")
+        options.add_argument("--nogpu")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--window-size=1280,1280")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--enable-javascript")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument('--disable-blink-features=AutomationControlled')
         return options
 
 
